@@ -1,0 +1,46 @@
+/* Property Card Style Overrides - Square edges and seamless blending */
+
+/* Similar Properties - Remove rounded corners and make seamless */
+.similar-property-card {
+    background: #f6f6f1 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    border: 1px solid rgba(191, 161, 107, 0.05) !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease !important;
+}
+
+.similar-property-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(191, 161, 107, 0.1);
+    border-color: rgba(191, 161, 107, 0.15);
+}
+
+/* Detail cards - Remove rounded corners and make seamless */
+.detail-card {
+    background: #f6f6f1 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    border: 1px solid rgba(191, 161, 107, 0.05) !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease !important;
+}
+
+.detail-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(191, 161, 107, 0.1);
+    border-color: rgba(191, 161, 107, 0.15);
+}
+
+/* Featured properties on homepage - ensure consistency */
+.property-card {
+    background: #f6f6f1 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    border: 1px solid rgba(191, 161, 107, 0.05) !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease !important;
+}
+
+.property-card:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 2px 8px rgba(191, 161, 107, 0.1) !important;
+    border-color: rgba(191, 161, 107, 0.15) !important;
+}
