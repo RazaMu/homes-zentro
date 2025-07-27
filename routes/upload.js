@@ -4,7 +4,7 @@ const sharp = require('sharp');
 const path = require('path');
 const fs = require('fs').promises;
 const { query } = require('../config/database');
-const { clerkAuth } = require('../middleware/auth');
+const { adminAuth } = require('../middleware/admin-auth');
 const router = express.Router();
 
 // Ensure upload directories exist
@@ -61,7 +61,7 @@ const upload = multer({
 });
 
 // POST /api/upload/property-media - Upload images and videos for a property (admin only)
-router.post('/property-media', clerkAuth, upload.array('files', 20), async (req, res) => {
+router.post('/property-media', adminAuth, upload.array('files', 20), async (req, res) => {
   try {
     const { property_id } = req.body;
     
@@ -192,7 +192,7 @@ router.post('/property-media', clerkAuth, upload.array('files', 20), async (req,
 });
 
 // DELETE /api/upload/image/:id - Delete an image (admin only)
-router.delete('/image/:id', clerkAuth, async (req, res) => {
+router.delete('/image/:id', adminAuth, async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -244,7 +244,7 @@ router.delete('/image/:id', clerkAuth, async (req, res) => {
 });
 
 // DELETE /api/upload/video/:id - Delete a video (admin only)
-router.delete('/video/:id', clerkAuth, async (req, res) => {
+router.delete('/video/:id', adminAuth, async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -297,7 +297,7 @@ router.delete('/video/:id', clerkAuth, async (req, res) => {
 });
 
 // GET /api/upload/property/:id/media - Get all media for a property (admin only)
-router.get('/property/:id/media', clerkAuth, async (req, res) => {
+router.get('/property/:id/media', adminAuth, async (req, res) => {
   try {
     const { id } = req.params;
 

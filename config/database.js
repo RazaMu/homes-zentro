@@ -1,21 +1,28 @@
 const { Pool } = require('pg');
 require('dotenv').config();
 
-// Database configuration
-const dbConfig = {
-  user: process.env.DB_USER || 'postgres',
-  host: process.env.DB_HOST || 'localhost', 
-  database: process.env.DB_NAME || 'zentro_homes',
-  password: process.env.DB_PASSWORD || 'password',
-  port: process.env.DB_PORT || 5432,
-};
+// Database configuration - prioritize Supabase connection
+const dbConfig = process.env.DATABASE_URL 
+  ? {
+      connectionString: process.env.DATABASE_URL,
+      ssl: {
+        rejectUnauthorized: false
+      }
+    }
+  : {
+      user: process.env.DB_USER || 'postgres',
+      host: process.env.DB_HOST || 'localhost', 
+      database: process.env.DB_NAME || 'zentro_homes',
+      password: process.env.DB_PASSWORD || 'password',
+      port: process.env.DB_PORT || 5432,
+    };
 
 // Create connection pool
 const pool = new Pool(dbConfig);
 
 // Test connection
 pool.on('connect', () => {
-  console.log('✅ Connected to PostgreSQL database');
+  console.log('✅ Connected to PostgreSQL database via', process.env.DATABASE_URL ? 'Supabase' : 'localhost');
 });
 
 pool.on('error', (err) => {

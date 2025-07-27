@@ -1,6 +1,6 @@
 const express = require('express');
 const { query, getClient } = require('../config/database');
-const { clerkAuth } = require('../middleware/auth');
+const { adminAuth } = require('../middleware/admin-auth');
 const router = express.Router();
 
 // Helper function to build filter conditions
@@ -263,7 +263,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // POST /api/properties - Create new property (admin only)
-router.post('/', clerkAuth, async (req, res) => {
+router.post('/', adminAuth, async (req, res) => {
   const client = await getClient();
   
   try {
@@ -399,7 +399,7 @@ router.post('/', clerkAuth, async (req, res) => {
 });
 
 // PUT /api/properties/:id - Update property (admin only)
-router.put('/:id', clerkAuth, async (req, res) => {
+router.put('/:id', adminAuth, async (req, res) => {
   const client = await getClient();
   
   try {
@@ -559,7 +559,7 @@ router.put('/:id', clerkAuth, async (req, res) => {
 });
 
 // DELETE /api/properties/:id - Delete property (admin only)
-router.delete('/:id', clerkAuth, async (req, res) => {
+router.delete('/:id', adminAuth, async (req, res) => {
   try {
     const { id } = req.params;
 

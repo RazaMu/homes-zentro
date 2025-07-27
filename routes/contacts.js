@@ -1,6 +1,6 @@
 const express = require('express');
 const { query } = require('../config/database');
-const { clerkAuth } = require('../middleware/auth');
+const { adminAuth } = require('../middleware/admin-auth');
 const router = express.Router();
 
 // POST /api/contacts - Submit contact form (public)
@@ -57,7 +57,7 @@ router.post('/', async (req, res) => {
 });
 
 // GET /api/contacts - Get all contacts (admin only)
-router.get('/', clerkAuth, async (req, res) => {
+router.get('/', adminAuth, async (req, res) => {
   try {
     const {
       status,
@@ -152,7 +152,7 @@ router.get('/', clerkAuth, async (req, res) => {
 });
 
 // GET /api/contacts/:id - Get single contact (admin only)
-router.get('/:id', clerkAuth, async (req, res) => {
+router.get('/:id', adminAuth, async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -191,7 +191,7 @@ router.get('/:id', clerkAuth, async (req, res) => {
 });
 
 // PUT /api/contacts/:id - Update contact status (admin only)
-router.put('/:id', clerkAuth, async (req, res) => {
+router.put('/:id', adminAuth, async (req, res) => {
   try {
     const { id } = req.params;
     const { status } = req.body;
@@ -235,7 +235,7 @@ router.put('/:id', clerkAuth, async (req, res) => {
 });
 
 // DELETE /api/contacts/:id - Delete contact (admin only)
-router.delete('/:id', clerkAuth, async (req, res) => {
+router.delete('/:id', adminAuth, async (req, res) => {
   try {
     const { id } = req.params;
 

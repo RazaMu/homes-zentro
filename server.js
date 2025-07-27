@@ -8,6 +8,7 @@ require('dotenv').config();
 const propertyRoutes = require('./routes/properties');
 const contactRoutes = require('./routes/contacts');
 const uploadRoutes = require('./routes/upload');
+const { adminAuth, adminLogin } = require('./middleware/admin-auth');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -26,9 +27,17 @@ const limiter = rateLimit({
 });
 app.use('/api/', limiter);
 
-// CORS configuration
+// CORS configuration - include Vercel domain
+const allowedOrigins = [
+  'http://localhost:3000', 
+  'http://127.0.0.1:3000', 
+  'http://localhost:8080', 
+  'http://127.0.0.1:8080',
+  'https://zentro-homes.vercel.app'  // Add your Vercel domain
+];
+
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://127.0.0.1:3000', 'http://localhost:8080', 'http://127.0.0.1:8080'],
+  origin: allowedOrigins,
   credentials: true
 }));
 
@@ -39,6 +48,15 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Static files
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(express.static(path.join(__dirname, 'zentrohomes.com')));
+
+// Admin authentication routes
+app.post('/api/admin/login', adminLogin);
+app.get('/api/admin/verify', adminAuth, (req, res) => {
+  res.json({
+    success: true,
+    user: req.user
+  });
+});
 
 // API routes
 app.use('/api/properties', propertyRoutes);
@@ -83,6 +101,7 @@ app.listen(PORT, () => {
   console.log(`📱 Website: http://localhost:${PORT}`);
   console.log(`⚡ Admin: http://localhost:${PORT}/admin`);
   console.log(`🔧 API: http://localhost:${PORT}/api`);
+  console.log(`🔑 Admin credentials: ${process.env.ADMIN_USERNAME || 'admin'} / ${process.env.ADMIN_PASSWORD || 'zentro2025'}`);
 });
 
 module.exports = app;
