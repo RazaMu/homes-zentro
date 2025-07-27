@@ -19,7 +19,8 @@
       "Bash(npm install:*)",
       "Bash(npm:*)",
       "Bash(move:*)",
-      "Bash(copy:*)"
+      "Bash(copy:*)",
+      "Bash(cat:*)"
     ],
     "deny": []
   }
