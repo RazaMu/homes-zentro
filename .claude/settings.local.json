@@ -13,7 +13,9 @@
       "Bash(sed:*)",
       "Bash(grep:*)",
       "Bash(rg:*)",
-      "WebFetch(domain:firebase.google.com)"
+      "WebFetch(domain:firebase.google.com)",
+      "Bash(mv:*)",
+      "Bash(ls:*)"
     ],
     "deny": []
   }
