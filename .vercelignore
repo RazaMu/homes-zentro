@@ -1,0 +1,9 @@
+node_modules
+.env.local
+.env
+server.js
+scripts/
+*.log
+.DS_Store
+.vscode/
+.git/

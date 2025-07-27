@@ -15,7 +15,11 @@
       "Bash(rg:*)",
       "WebFetch(domain:firebase.google.com)",
       "Bash(mv:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(npm install:*)",
+      "Bash(npm:*)",
+      "Bash(move:*)",
+      "Bash(copy:*)"
     ],
     "deny": []
   }
