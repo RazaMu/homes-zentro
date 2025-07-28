@@ -1,16 +1,6 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "server.js",
-      "use": "@vercel/node"
-    }
-  ],
   "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/server.js"
-    },
     {
       "src": "/admin",
       "dest": "/zentrohomes.com/admin/index.html"
@@ -29,11 +19,8 @@
     }
   ],
   "functions": {
-    "server.js": {
+    "api/**/*.js": {
       "maxDuration": 30
     }
-  },
-  "env": {
-    "NODE_ENV": "production"
   }
 }
