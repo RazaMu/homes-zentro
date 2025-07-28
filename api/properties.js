@@ -256,29 +256,25 @@ module.exports = async (req, res) => {
       });
 
     } else if (req.method === 'POST') {
-      // Verify Clerk authentication for admin operations
-      const { createClerkClient } = require('@clerk/clerk-sdk-node');
-      const clerkClient = createClerkClient({
-        secretKey: process.env.CLERK_SECRET_KEY,
+      // Verify admin authentication for admin operations
+      const { adminAuth } = require('../middleware/admin-auth');
+      
+      // Create a promise to wrap middleware execution
+      const authenticateAdmin = new Promise((resolve, reject) => {
+        adminAuth(req, res, (error) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve();
+          }
+        });
       });
 
-      const authHeader = req.headers.authorization;
-      if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res.status(401).json({
-          success: false,
-          error: 'Authentication required'
-        });
-      }
-
-      const token = authHeader.substring(7);
-      
       try {
-        await clerkClient.verifyToken(token);
+        await authenticateAdmin;
       } catch (error) {
-        return res.status(401).json({
-          success: false,
-          error: 'Invalid authentication token'
-        });
+        // If authentication failed, the middleware has already sent the response
+        return;
       }
 
       // Create new property

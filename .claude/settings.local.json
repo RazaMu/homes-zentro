@@ -20,7 +20,9 @@
       "Bash(npm:*)",
       "Bash(move:*)",
       "Bash(copy:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(node:*)",
+      "Bash(del test-db.js test-admin-auth.js)"
     ],
     "deny": []
   }

@@ -6,28 +6,17 @@ let dbConfig;
 
 if (process.env.DATABASE_URL) {
   try {
-    // Parse the DATABASE_URL manually to avoid parsing issues
-    const url = new URL(process.env.DATABASE_URL);
-    dbConfig = {
-      user: url.username,
-      password: url.password,
-      host: url.hostname,
-      port: parseInt(url.port) || 5432,
-      database: url.pathname.slice(1), // Remove leading slash
-      ssl: {
-        rejectUnauthorized: false
-      }
-    };
-    console.log('Using parsed DATABASE_URL for connection');
-  } catch (error) {
-    console.error('Error parsing DATABASE_URL:', error);
-    // Fallback to connection string
+    // Use the DATABASE_URL directly as Supabase provides it pre-formatted
     dbConfig = {
       connectionString: process.env.DATABASE_URL,
       ssl: {
         rejectUnauthorized: false
       }
     };
+    console.log('Using Supabase DATABASE_URL connection string');
+  } catch (error) {
+    console.error('Error with DATABASE_URL:', error);
+    throw error;
   }
 } else {
   dbConfig = {
@@ -62,6 +51,16 @@ const query = async (text, params) => {
     return res;
   } catch (error) {
     console.error('❌ Query error:', error);
+    
+    // If it's a connection error, provide a helpful mock response for development
+    if (error.code === 'ENOTFOUND' && process.env.NODE_ENV === 'development') {
+      console.log('🔧 Mock response for development - database unavailable');
+      return {
+        rows: [],
+        rowCount: 0
+      };
+    }
+    
     throw error;
   }
 };
