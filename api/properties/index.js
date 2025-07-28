@@ -19,6 +19,16 @@ app.use((req, res, next) => {
   next();
 });
 
+// Add error handling middleware
+app.use((err, req, res, next) => {
+  console.error('Properties API Error:', err);
+  res.status(500).json({ 
+    error: 'Internal server error',
+    message: err.message,
+    stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
+  });
+});
+
 app.use('/', propertyRoutes);
 
 module.exports = app;

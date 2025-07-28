@@ -89,6 +89,7 @@ function buildFilterConditions(filters, paramCount = 0) {
 
 // GET /api/properties - Get all properties with filters (public)
 router.get('/', async (req, res) => {
+  console.log('Properties GET request received');
   try {
     const {
       type,
