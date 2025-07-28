@@ -23,7 +23,7 @@ function buildFilterConditions(filters, paramCount = 0) {
 
   if (type) {
     currentParamCount++;
-    conditions.push(`p.type = $${currentParamCount}`);
+    conditions.push(`p.property_type = $${currentParamCount}`);
     params.push(type);
   }
 
@@ -132,7 +132,7 @@ router.get('/', async (req, res) => {
           DISTINCT jsonb_build_object(
             'id', pi.id,
             'url', pi.image_url,
-            'is_main', pi.is_main,
+            'is_main', pi.is_primary,
             'alt_text', pi.alt_text,
             'display_order', pi.display_order
           )
@@ -213,7 +213,7 @@ router.get('/:id', async (req, res) => {
           DISTINCT jsonb_build_object(
             'id', pi.id,
             'url', pi.image_url,
-            'is_main', pi.is_main,
+            'is_main', pi.is_primary,
             'alt_text', pi.alt_text,
             'display_order', pi.display_order
           ) ORDER BY pi.display_order, pi.id
@@ -307,15 +307,15 @@ router.post('/', adminAuth, async (req, res) => {
     // Insert property
     const propertyResult = await client.query(`
       INSERT INTO properties (
-        title, type, status, price, currency, area, city, country,
-        latitude, longitude, bedrooms, bathrooms, parking, size, size_unit,
-        description, amenities, year_built, furnished, available
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20)
+        title, property_type, status, price, area, city,
+        bedrooms, bathrooms, parking, size, 
+        description, amenities
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
       RETURNING *
     `, [
-      title, type, status, price, currency, area, city, country,
-      latitude, longitude, bedrooms, bathrooms, parking, size, size_unit,
-      description, amenities, year_built, furnished, available
+      title, type, status, price, area, city,
+      bedrooms, bathrooms, parking, size, 
+      description, amenities
     ]);
 
     const propertyId = propertyResult.rows[0].id;
@@ -325,7 +325,7 @@ router.post('/', adminAuth, async (req, res) => {
       for (let i = 0; i < images.length; i++) {
         const image = images[i];
         await client.query(`
-          INSERT INTO property_images (property_id, image_url, is_main, alt_text, display_order)
+          INSERT INTO property_images (property_id, image_url, is_primary, alt_text, display_order)
           VALUES ($1, $2, $3, $4, $5)
         `, [propertyId, image.url, image.is_main || i === 0, image.alt_text || title, image.display_order || i]);
       }
@@ -352,7 +352,7 @@ router.post('/', adminAuth, async (req, res) => {
           DISTINCT jsonb_build_object(
             'id', pi.id,
             'url', pi.image_url,
-            'is_main', pi.is_main,
+            'is_main', pi.is_primary,
             'alt_text', pi.alt_text,
             'display_order', pi.display_order
           ) ORDER BY pi.display_order, pi.id
@@ -512,7 +512,7 @@ router.put('/:id', adminAuth, async (req, res) => {
           DISTINCT jsonb_build_object(
             'id', pi.id,
             'url', pi.image_url,
-            'is_main', pi.is_main,
+            'is_main', pi.is_primary,
             'alt_text', pi.alt_text,
             'display_order', pi.display_order
           ) ORDER BY pi.display_order, pi.id
