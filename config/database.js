@@ -2,20 +2,42 @@ const { Pool } = require('pg');
 require('dotenv').config();
 
 // Database configuration - prioritize Supabase connection
-const dbConfig = process.env.DATABASE_URL 
-  ? {
+let dbConfig;
+
+if (process.env.DATABASE_URL) {
+  try {
+    // Parse the DATABASE_URL manually to avoid parsing issues
+    const url = new URL(process.env.DATABASE_URL);
+    dbConfig = {
+      user: url.username,
+      password: url.password,
+      host: url.hostname,
+      port: parseInt(url.port) || 5432,
+      database: url.pathname.slice(1), // Remove leading slash
+      ssl: {
+        rejectUnauthorized: false
+      }
+    };
+    console.log('Using parsed DATABASE_URL for connection');
+  } catch (error) {
+    console.error('Error parsing DATABASE_URL:', error);
+    // Fallback to connection string
+    dbConfig = {
       connectionString: process.env.DATABASE_URL,
       ssl: {
         rejectUnauthorized: false
       }
-    }
-  : {
-      user: process.env.DB_USER || 'postgres',
-      host: process.env.DB_HOST || 'localhost', 
-      database: process.env.DB_NAME || 'zentro_homes',
-      password: process.env.DB_PASSWORD || 'password',
-      port: process.env.DB_PORT || 5432,
     };
+  }
+} else {
+  dbConfig = {
+    user: process.env.DB_USER || 'postgres',
+    host: process.env.DB_HOST || 'localhost', 
+    database: process.env.DB_NAME || 'zentro_homes',
+    password: process.env.DB_PASSWORD || 'password',
+    port: process.env.DB_PORT || 5432,
+  };
+}
 
 // Create connection pool
 const pool = new Pool(dbConfig);
